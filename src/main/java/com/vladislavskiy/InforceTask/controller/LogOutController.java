@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/logout")
 public class LogOutController {
     @GetMapping("/")
-    public String logOut(){
+    public String logOut() {
         return "redirect:/signIn/";
     }
 }

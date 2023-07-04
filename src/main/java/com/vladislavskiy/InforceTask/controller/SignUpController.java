@@ -45,11 +45,16 @@ public class SignUpController {
             model.addAttribute("user", user);
             return "signUp";
         }
+
+
+
         else if (bindingResult.hasFieldErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             model.addAttribute("user", user);
             return "signUp";
         }
+
+
        else if (userService.findByEmail(user.getEmail()) != null) {
             ObjectError error = new ObjectError("email","An account already exists for this email");
             bindingResult.addError(error);

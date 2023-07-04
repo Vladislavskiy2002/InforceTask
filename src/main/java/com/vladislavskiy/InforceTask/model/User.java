@@ -29,6 +29,7 @@ public class User {
     private String email;
     @Transient
     private String password;
+
     @Column(name = "password")
     private String hashPassword;
 
@@ -42,6 +43,7 @@ public class User {
                     name = "role_id")
     )
     private Collection<Role> roles;
+
     public User() {
     }
 
