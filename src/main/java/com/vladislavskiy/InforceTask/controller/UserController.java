@@ -6,8 +6,13 @@ import com.vladislavskiy.InforceTask.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.security.Principal;
 @Slf4j
 @Controller
@@ -32,8 +37,15 @@ public class UserController {
         return "user-change-email";
     }
     @PostMapping("/changeEmail")
-    private String changeEmailCurrentUser(String newEmail, Principal principal, Model model){
-        log.info("LLLLLLLLLLLOOOOOOOOOOGGGGGGG  " + newEmail);
+    private String changeEmailCurrentUser(@Valid User user, BindingResult bindingResult, String newEmail, Principal principal, Model model){
+        log.info("changeEmailCurrentUser with email: " + newEmail);
+        if(!newEmail.matches("[a-zA-Z0-9]{4,15}@[a-zA-Z]{2,10}.[a-zA-Z]{2,5}")) {
+            ObjectError error = new ObjectError("newEmail","email isn't correct! Example of email: name@gmail.com");
+            bindingResult.addError(error);
+            model.addAttribute("error", error);
+            model.addAttribute("user", userService.findByEmail(principal.getName()));
+            return "user-change-email";
+        }
         userService.changeEmail(newEmail, principal.getName());
         return "redirect:/logout/";
     }
@@ -54,20 +66,23 @@ public class UserController {
     }
     @PostMapping("/changeSurname")
     private String changeSurnameCurrentUser(String newSurname, Principal principal, Model model){
-        userService.changeName(newSurname, principal.getName());
+        userService.changeSurmame(newSurname, principal.getName());
         return "redirect:/user/";
     }
     @GetMapping("/changePassword")
     private String getFormToChangePasswordCurrentUser(Principal principal, Model model){
-        model.addAttribute("user", userService.findByEmail(principal.getName()));
         return "user-change-password";
     }
     @PostMapping("/changePassword")
-    private String changePasswordCurrentUser(PasswordDto passwordDto, Principal principal){
-        if(!userService.changePassword(principal.getName(), passwordDto.getNewPassword(),passwordDto.getOldPassword()))
+    private String changePasswordCurrentUser(Model model, PasswordDto passwordDto, Principal principal){
+        if(!passwordDto.getNewPassword().matches("^.{4,19}$"))
         {
-            log.info("PASSWORD ISN'T CORRECT");
+            return "password-not-correct";
         }
-        return "redirect:/user/";
+        else if(!userService.changePassword(principal.getName(), passwordDto.getNewPassword(),passwordDto.getOldPassword()))
+        {
+            return "password-not-changed";
+        }
+        else return "password-changed-successfully";
     }
 }

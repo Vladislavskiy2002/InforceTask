@@ -12,9 +12,10 @@
         <input placeholder="New Name" name="newName"  value="${user.name}">
         <input type="submit" value="enter">
     </form>
-    <tr>OR</tr>
-    <form method="get" action="/signUp">
-        <button class="btn btn-primary" type="submit">SignUp</button>
+    <br>
+    <br>
+    <form method="get" action="/user/">
+        <button class="btn btn-primary" type="submit">back</button>
     </form>
 </div>
 </body>

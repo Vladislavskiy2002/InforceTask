@@ -1,7 +1,6 @@
 package com.vladislavskiy.InforceTask.service;
 
 import com.vladislavskiy.InforceTask.model.User;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -15,5 +14,6 @@ public interface UserService {
     void changeEmail(String newEmail, String oldEmail);
 
     void changeName(String newName, String oldEmail);
+    void changeSurmame(String newSurname, String oldEmail);
     Boolean changePassword(String email, String newPassword, String oldPassword);
 }

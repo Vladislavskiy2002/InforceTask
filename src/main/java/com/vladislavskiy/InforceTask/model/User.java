@@ -1,15 +1,19 @@
 package com.vladislavskiy.InforceTask.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.util.Collection;
 
 @Entity(name = "user_table")
 @Getter
 @Setter
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +28,6 @@ public class User {
     @Pattern(regexp = "[a-zA-Z0-9]{4,15}@[a-zA-Z]{2,10}.[a-zA-Z]{2,5}", message = "email isn't correct! Example of email: name@gmail.com")
     private String email;
     @Transient
-    @NotBlank(message = "Password is mandatory")
     private String password;
     @Column(name = "password")
     private String hashPassword;
@@ -58,8 +61,6 @@ public class User {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", hashPassword='" + hashPassword + '\'' +
                 '}';
     }
 }

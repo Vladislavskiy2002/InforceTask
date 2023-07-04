@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -20,10 +22,12 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+    @Transactional
     @Override
     public Boolean addUser(User user) {
 
@@ -39,28 +43,49 @@ public class UserServiceImpl implements UserService {
             return false;
         }
     }
+    @Transactional
     @Override
     public User findByEmail(String email) {
+
         return userRepository.findByEmail(email);
     }
+    @Transactional
     @Override
     public void changeEmail(String newEmail, String oldEmail) {
-        User user =  userRepository.findByEmail(oldEmail);
-        user.setEmail(newEmail);
-        userRepository.save(user);
+        Optional<User> user =  Optional.ofNullable(userRepository.findByEmail(oldEmail));
+        if(user.isPresent()) {
+            user.get().setEmail(newEmail);
+            userRepository.save(user.get());
+        }
     }
+    @Transactional
     @Override
     public void changeName(String newName, String oldEmail) {
-        User user = userRepository.findByEmail(oldEmail);
-        user.setName(newName);
-        userRepository.save(user);
+        Optional<User> user =  Optional.ofNullable(userRepository.findByEmail(oldEmail));
+        if(user.isPresent()) {
+            user.get().setName(newName);
+            userRepository.save(user.get());
+        }
     }
+    @Transactional
+    @Override
+    public void changeSurmame(String newSurname, String oldEmail) {
+        Optional<User> user =  Optional.ofNullable(userRepository.findByEmail(oldEmail));
+        if(user.isPresent()) {
+            user.get().setSurname(newSurname);
+            userRepository.save(user.get());
+        }
+    }
+    @Transactional
     public Boolean changePassword(String email, String newPassword, String oldPassword) {
-        User user = userRepository.findByEmail(email);
-        if(encoder.matches(oldPassword, user.getHashPassword())) {
-            user.setHashPassword(encoder.encode(newPassword));
-            userRepository.save(user);
-            return true;
+        Optional<User> user =  Optional.ofNullable(userRepository.findByEmail(email));
+        if(user.isPresent()) {
+            if (encoder.matches(oldPassword, user.get().getHashPassword())) {
+                user.get().setHashPassword(encoder.encode(newPassword));
+                userRepository.save(user.get());
+                return true;
+            } else
+                return false;
         }
         else
             return false;

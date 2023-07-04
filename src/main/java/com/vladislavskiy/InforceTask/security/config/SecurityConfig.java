@@ -30,7 +30,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("logout/**").authenticated()
                 .antMatchers("/signUp").permitAll()
                 .antMatchers("/signIn/").permitAll()
-                .antMatchers("/signIn/").permitAll()
                 .and()
                 .logout()
                 .logoutUrl("/logout/**")

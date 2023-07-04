@@ -13,7 +13,6 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
 import javax.validation.Valid;
 import java.util.Collections;
 
@@ -38,12 +37,20 @@ public class SignUpController {
     }
     @PostMapping("/signUp")
     public String signUpUser(@Valid User user, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasFieldErrors()) {
+        if(user.getPassword().isEmpty() || user.getPassword().length() <= 3 || user.getPassword().length() >= 20)
+        {
+            ObjectError error = new ObjectError("password","password must be greatest than 3 and less than 20 symbols");
+            bindingResult.addError(error);
             model.addAttribute("errors", bindingResult.getAllErrors());
             model.addAttribute("user", user);
             return "signUp";
         }
-        if (userService.findByEmail(user.getEmail()) != null) {
+        else if (bindingResult.hasFieldErrors()) {
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            model.addAttribute("user", user);
+            return "signUp";
+        }
+       else if (userService.findByEmail(user.getEmail()) != null) {
             ObjectError error = new ObjectError("email","An account already exists for this email");
             bindingResult.addError(error);
             model.addAttribute("errors", bindingResult.getAllErrors());

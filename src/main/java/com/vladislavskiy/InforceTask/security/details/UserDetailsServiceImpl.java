@@ -9,7 +9,6 @@ import com.vladislavskiy.InforceTask.repository.UserRepository;
 import com.vladislavskiy.InforceTask.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +17,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 @Service(value = "customUserDetailsService")
 @Transactional
 public class UserDetailsServiceImpl extends UserDetailsImpl implements UserDetailsService {
